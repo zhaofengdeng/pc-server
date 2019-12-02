@@ -1,0 +1,6 @@
+/target/*
+/.idea/*
+/mysql-create-all.sql
+/mysql-drop-all.sql
+/star-create-all.sql
+/star-drop-all.sql

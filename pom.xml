@@ -1,0 +1,105 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<groupId>com</groupId>
+	<artifactId>alcon-monitor</artifactId>
+	<packaging>war</packaging>
+	<version>0.0.1</version>
+	<name>project Maven Webapp</name>
+	<url>http://maven.apache.org</url>
+	<!--使工程变为springBoo应用 -->
+	<parent>
+		<groupId>org.springframework.boot</groupId>
+		<artifactId>spring-boot-starter-parent</artifactId>
+		<version>2.0.2.RELEASE</version>
+	</parent>
+	<properties>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+		<java.version>1.8</java.version>
+		<shiro.version>1.4.0</shiro.version>
+	</properties>
+	<dependencies>
+		<!--web应用 -->
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-web</artifactId>
+		</dependency>
+		<!-- 使用热部署，spring会自动监测文件，重新加载文件 -->
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-devtools</artifactId>
+			<optional>true</optional>
+		</dependency>
+		<!-- ebean使用 -->
+		<dependency>
+			<groupId>io.ebean</groupId>
+			<artifactId>ebean</artifactId>
+			<version>11.39.1</version>
+		</dependency>
+
+
+
+		<dependency>
+			<groupId>mysql</groupId>
+			<artifactId>mysql-connector-java</artifactId>
+			<version>5.1.45</version>
+		</dependency>
+		<dependency>
+			<groupId>org.json</groupId>
+			<artifactId>json</artifactId>
+			<version>20180813</version>
+		</dependency>
+
+		<!-- 赵丰登的常用工具类 -->
+		<dependency>
+			<groupId>util</groupId>
+			<artifactId>base</artifactId>
+			<version>0.22</version>
+		</dependency>
+		
+		<dependency>
+			<groupId>org.apache.shiro</groupId>
+			<artifactId>shiro-spring</artifactId>
+			<version>1.4.0</version>
+		</dependency>
+
+		
+	</dependencies>
+	<build>
+		<finalName>pc-server</finalName>
+		<plugins>
+			<plugin>
+				<groupId>org.springframework.boot</groupId>
+				<artifactId>spring-boot-maven-plugin</artifactId>
+			</plugin>
+			<plugin>
+				<groupId>io.repaint.maven</groupId>
+				<artifactId>tiles-maven-plugin</artifactId>
+				<version>2.10</version>
+				<extensions>true</extensions>
+				<configuration>
+					<tiles>
+						<tile>org.avaje.tile:java-compile:1.1</tile>
+						<tile>io.ebean.tile:enhancement:5.6</tile>
+					</tiles>
+				</configuration>
+			</plugin>
+		</plugins>
+	</build>
+	<!-- 社内maven -->
+	<repositories>
+		<repository>
+			<id>aliyunmaven</id>
+			<url>http://maven.aliyun.com/nexus/content/groups/public/</url>
+		</repository>
+		<repository>
+			<id>nexus</id>
+			<name>nexus</name>
+			<url>http://git.khktsoft.com:8082/nexus/content/groups/public/</url>
+		</repository>
+
+
+	</repositories>
+</project>
