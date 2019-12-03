@@ -27,7 +27,7 @@ public class UserLoginController {
 	@RequestMapping(value = "/go_login", method = { RequestMethod.GET, RequestMethod.POST })
 	public AjaxForm goLogin() {
 		AjaxForm ajaxForm = new AjaxForm();
-		return ajaxForm.setError(-73, "未登录");
+		return ajaxForm.setError(-100, "未登录");
 	}
 
 	@RequestMapping(value = "/login", method = { RequestMethod.GET, RequestMethod.POST })
@@ -51,10 +51,15 @@ public class UserLoginController {
 			return ajaxForm.setError("用户名密码错误");
 		}
 		User user = users.get(0);
-		SessionUtil.setSessionInfo(SessionKeys.LOGIN_USER, user);
-		Subject currentUser = SecurityUtils.getSubject();
-		UsernamePasswordToken token = new UsernamePasswordToken(user.getAccount(), user.getAccount());
-		currentUser.login(token);
+		try {
+			SessionUtil.setSessionInfo(SessionKeys.LOGIN_USER, user);
+			Subject currentUser = SecurityUtils.getSubject();
+			UsernamePasswordToken token = new UsernamePasswordToken(user.getAccount(), user.getAccount());
+			currentUser.login(token);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
 		return ajaxForm.setSuccess(user);
 	}
 

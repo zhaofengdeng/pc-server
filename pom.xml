@@ -58,14 +58,25 @@
 			<artifactId>base</artifactId>
 			<version>0.22</version>
 		</dependency>
-		
+
 		<dependency>
 			<groupId>org.apache.shiro</groupId>
 			<artifactId>shiro-spring</artifactId>
 			<version>1.4.0</version>
 		</dependency>
+		<!--test接口 -->
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-test</artifactId>
+			<scope>test</scope>
+			<exclusions>
+				<exclusion>
+					<groupId>com.vaadin.external.google</groupId>
+					<artifactId>android-json</artifactId>
+				</exclusion>
+			</exclusions>
+		</dependency>
 
-		
 	</dependencies>
 	<build>
 		<finalName>pc-server</finalName>
