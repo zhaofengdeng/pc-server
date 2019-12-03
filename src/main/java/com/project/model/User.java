@@ -9,6 +9,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
+import io.ebean.Ebean;
 import io.ebean.annotation.DbComment;
 
 @Entity
@@ -57,6 +58,12 @@ public class User {
 	@DbComment("deleted")
 	private Boolean deleted;
 
+	public void save() {
+		this.setInsertedAt(new Date());
+		this.setUpdatedAt(new Date());
+		this.setDeleted(false);
+		Ebean.save(this);
+	}
 	public Long getId() {
 		return id;
 	}
