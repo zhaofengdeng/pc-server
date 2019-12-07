@@ -53,10 +53,16 @@
 		</dependency>
 
 		<!-- 赵丰登的常用工具类 -->
+		
 		<dependency>
 			<groupId>util</groupId>
 			<artifactId>base</artifactId>
-			<version>0.22</version>
+			<version>0.25</version>
+		</dependency>
+		<dependency>
+			<groupId>util</groupId>
+			<artifactId>ebean-plus</artifactId>
+			<version>1.01</version>
 		</dependency>
 
 		<dependency>

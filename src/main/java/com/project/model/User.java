@@ -2,6 +2,7 @@ package com.project.model;
 
 import java.util.Date;
 
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -9,13 +10,14 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
-import io.ebean.Ebean;
+import com.model.BaseEntity;
+
 import io.ebean.annotation.DbComment;
 
 @Entity
 @Table(name = "tbl_user")
 @DbComment("账户表")
-public class User {
+public class User extends BaseEntity{
 	@Id
 	@Column(name = "id")
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -58,12 +60,24 @@ public class User {
 	@DbComment("deleted")
 	private Boolean deleted;
 
-	public void save() {
-		this.setInsertedAt(new Date());
-		this.setUpdatedAt(new Date());
-		this.setDeleted(false);
-		Ebean.save(this);
+
+	public String getEmail() {
+		return email;
 	}
+
+	public void setEmail(String email) {
+		this.email = email;
+	}
+
+	public Boolean getEnable() {
+		return enable;
+	}
+
+	public void setEnable(Boolean enable) {
+		this.enable = enable;
+	}
+
+
 	public Long getId() {
 		return id;
 	}

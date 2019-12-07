@@ -31,4 +31,9 @@ public class TestControllerUtil {
 		result = perform.andReturn().getResponse().getContentAsString();
 	}
 
+	public String getResult() {
+		return result;
+	}
+	
+
 }
