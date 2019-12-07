@@ -32,19 +32,19 @@ public class TestUserController {
 		mockMvc = MockMvcBuilders.webAppContextSetup(wac).build();
 	}
 
-//	@Test
-//	public void save() throws Exception {
-//		TestControllerUtil controllerUtil = new TestControllerUtil(mockMvc);
-//		String url = "/user/save_or_update";
-//		for (int i = 0; i < 10; i++) {
-//			JSONObject requestJson = new JSONObject();
-//			requestJson.put("account", "test00" + i);
-//			requestJson.put("name", "姓名00");
-//			Map<String, String> expects = new HashMap<>();
-//			expects.put("success", "true");
-//			controllerUtil.checkByRequestBody(url, requestJson, expects);
-//		}
-//	}
+	@Test
+	public void save() throws Exception {
+		TestControllerUtil controllerUtil = new TestControllerUtil(mockMvc);
+		String url = "/user/save_or_update";
+		for (int i = 0; i < 200; i++) {
+			JSONObject requestJson = new JSONObject();
+			requestJson.put("account", "test00" + i);
+			requestJson.put("name", "姓名00");
+			Map<String, String> expects = new HashMap<>();
+			expects.put("success", "true");
+			controllerUtil.checkByRequestBody(url, requestJson, expects);
+		}
+	}
 //
 //	@Test
 //	public void update() throws Exception {
@@ -58,15 +58,15 @@ public class TestUserController {
 //		expects.put("success", "true");
 //		controllerUtil.checkByRequestBody(url, requestJson, expects);
 //	}
-	@Test
-	public void search() throws Exception {
-		TestControllerUtil controllerUtil = new TestControllerUtil(mockMvc);
-		String url = "/user/search";
-		JSONObject requestJson = new JSONObject();
-		Map<String, String> expects = new HashMap<>();
-		expects.put("success", "true");
-		controllerUtil.checkByRequestBody(url, requestJson, expects);
-		String result = controllerUtil.getResult();
-		JSONArray array = new JSONArray(new JSONObject(result).get("data"));
-	}
+//	@Test
+//	public void search() throws Exception {
+//		TestControllerUtil controllerUtil = new TestControllerUtil(mockMvc);
+//		String url = "/user/search";
+//		JSONObject requestJson = new JSONObject();
+//		Map<String, String> expects = new HashMap<>();
+//		expects.put("success", "true");
+//		controllerUtil.checkByRequestBody(url, requestJson, expects);
+//		String result = controllerUtil.getResult();
+//		JSONArray array = new JSONArray(new JSONObject(result).get("data"));
+//	}
 }
