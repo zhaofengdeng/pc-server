@@ -20,6 +20,7 @@ import com.util.form.AjaxForm;
 
 import io.ebean.Ebean;
 import io.ebean.ExpressionList;
+import io.ebean.Query;
 import javafx.scene.control.Pagination;
 
 @RestController
@@ -40,6 +41,7 @@ public class UserController extends BaseController{
 		String account =MapUtil.getString(params, "account");
 		EbeanELUtil.like(el, "account", account);
 		EbeanELUtil.like(el, "name", name);
+		Query<User> query = el.orderBy("updatedAt desc");
 		Paginate paginate=super.paginate(el, params);
 		return paginate.toAjaxForm();
 	}

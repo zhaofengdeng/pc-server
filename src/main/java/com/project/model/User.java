@@ -11,6 +11,7 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 
 import com.model.BaseEntity;
+import com.util.base.StringUtil;
 
 import io.ebean.annotation.DbComment;
 
@@ -60,6 +61,11 @@ public class User extends BaseEntity{
 	@DbComment("deleted")
 	private Boolean deleted;
 
+	@Override
+	public void save() {
+		this.setPasswd(StringUtil.Md5BASE64("123456"));
+		super.save();
+	}
 
 	public String getEmail() {
 		return email;

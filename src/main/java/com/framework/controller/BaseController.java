@@ -9,6 +9,7 @@ import com.util.EbeanPaginateUtil;
 import com.util.base.MapUtil;
 
 import io.ebean.ExpressionList;
+import io.ebean.Query;
 
 public class BaseController {
 	/**
@@ -27,5 +28,15 @@ public class BaseController {
 		String curPage = MapUtil.getString(map, PaginateConfig.KEY_CUR_PAGE);
 		String maxPerPage = MapUtil.getString(map, PaginateConfig.KEY_MAX_PER_PAGE);
 		return EbeanPaginateUtil.paginate(el, curPage, maxPerPage);
+	}
+	public Paginate paginate(Query query, Map<String, Object> params) {
+		Object object = params.get("paginate");
+		Map<String, Object> map = new HashMap<String, Object>();
+		if (object != null) {
+			map = (Map<String, Object>) object;
+		}
+		String curPage = MapUtil.getString(map, PaginateConfig.KEY_CUR_PAGE);
+		String maxPerPage = MapUtil.getString(map, PaginateConfig.KEY_MAX_PER_PAGE);
+		return EbeanPaginateUtil.paginate(query, curPage, maxPerPage);
 	}
 }
