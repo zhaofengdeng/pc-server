@@ -3,6 +3,7 @@ package com.project.controller;
 import java.util.List;
 import java.util.Map;
 
+
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -12,7 +13,6 @@ import com.framework.controller.BaseController;
 import com.model.Paginate;
 import com.project.config.PaginateConfig;
 import com.project.model.Role;
-import com.project.model.User;
 import com.util.EbeanELUtil;
 import com.util.EbeanPaginateUtil;
 import com.util.EbeanUtil;
@@ -21,51 +21,61 @@ import com.util.base.ModelUtil;
 import com.util.form.AjaxForm;
 
 import io.ebean.Ebean;
+import io.ebean.Expr;
+import io.ebean.Expression;
 import io.ebean.ExpressionList;
 import io.ebean.Query;
 import javafx.scene.control.Pagination;
 
 @RestController
-@RequestMapping(value = "/user")
-public class UserController extends BaseController {
+@RequestMapping(value = "/role")
+public class RoleController extends BaseController{
 	@RequestMapping(value = "/save_or_update", method = { RequestMethod.GET, RequestMethod.POST })
 	public AjaxForm saveOrUpdate(@RequestBody Map<String, Object> params) {
 		AjaxForm ajaxForm = new AjaxForm();
-		User user = ModelUtil.toModel(params, User.class);
-		List<String> roleIds = MapUtil.getList(params, "roleIds");
-		List<Role> roles = Ebean.find(Role.class).where().in("id", roleIds).findList();
-		if (roles.size() != roleIds.size()) {
-			return ajaxForm.setError("角色选择异常!");
+		Role role = ModelUtil.toModel(params, Role.class);
+		ExpressionList<Role> el = Ebean.find(Role.class).where().eq("deleted", false);
+		el.ne("id", role.getId());
+		Expression el1 = Expr.eq("name", role.getName());
+		Expression el2 = Expr.eq("engName", role.getEngName());
+		el.or(el1, el2);
+		int count = el.findCount();
+		if(count>0) {
+			return ajaxForm.setError("该角色已存在");
 		}
-		user.setRoles(roles);
-		user.saveOrUpdate();
-
-		return ajaxForm.setSuccess(user);
+		role.saveOrUpdate();
+		
+		return ajaxForm.setSuccess(role);
 	}
 
 	@RequestMapping(value = "/search", method = { RequestMethod.GET, RequestMethod.POST })
 	public AjaxForm search(@RequestBody Map<String, Object> params) {
-		ExpressionList<User> el = Ebean.find(User.class).where().eq("deleted", false);
-		String name = MapUtil.getString(params, "name");
-		String account = MapUtil.getString(params, "account");
-		EbeanELUtil.like(el, "account", account);
+		ExpressionList<Role> el = Ebean.find(Role.class).where().eq("deleted", false);
+		String name =MapUtil.getString(params, "name");
 		EbeanELUtil.like(el, "name", name);
-		Query<User> query = el.orderBy("updatedAt desc");
-		Paginate paginate = super.paginate(el, params);
+		Query<Role> query = el.orderBy("updatedAt desc");
+		Paginate paginate=super.paginate(el, params);
 		return paginate.toAjaxForm();
+	}
+	@RequestMapping(value = "/search_all", method = { RequestMethod.GET, RequestMethod.POST })
+	public AjaxForm searchAll() {
+		AjaxForm ajaxForm=new AjaxForm();
+		ExpressionList<Role> el = Ebean.find(Role.class).where().eq("deleted", false);
+		List<Role> roles = el.orderBy("updatedAt desc").findList();
+		return ajaxForm.setSuccess(roles);
 	}
 
 	@RequestMapping(value = "/search_by_id", method = { RequestMethod.GET, RequestMethod.POST })
 	public AjaxForm searchById(@RequestBody Map<String, String> params) {
 		String id = params.get("id");
 
-		ExpressionList<User> el = Ebean.find(User.class).where().eq("deleted", false);
-		User user = el.eq("id", id).findOne();
+		ExpressionList<Role> el = Ebean.find(Role.class).where().eq("deleted", false);
+		Role role = el.eq("id", id).findOne();
 		AjaxForm ajaxForm = new AjaxForm();
-		if (user == null) {
+		if (role == null) {
 			return ajaxForm.setError("错误");
 		}
-		return ajaxForm.setSuccess(user);
+		return ajaxForm.setSuccess(role);
 	}
 
 }
