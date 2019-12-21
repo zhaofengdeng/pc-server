@@ -1,6 +1,7 @@
 package com.project.controller;
 
 import java.util.List;
+
 import java.util.Map;
 
 import org.springframework.web.bind.annotation.RequestBody;
@@ -11,7 +12,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.framework.controller.BaseController;
 import com.model.Paginate;
 import com.project.model.Role;
-import com.project.model.PermissionController;
+import com.project.model.Permission;
 import com.util.EbeanELUtil;
 import com.util.base.MapUtil;
 import com.util.base.ModelUtil;
@@ -22,35 +23,48 @@ import io.ebean.ExpressionList;
 import io.ebean.Query;
 
 @RestController
-@RequestMapping(value = "/permission_controller", method = RequestMethod.POST)
-public class PermissionContController extends BaseController {
+@RequestMapping(value = "/permission", method = RequestMethod.POST)
+public class PermissionController extends BaseController {
 	@RequestMapping(value = "/save_or_update", method = { RequestMethod.GET, RequestMethod.POST })
 	public AjaxForm saveOrUpdate(@RequestBody Map<String, Object> params) {
 		AjaxForm ajaxForm = new AjaxForm();
-		PermissionController model = ModelUtil.toModel(params, PermissionController.class);
-		System.out.println(model.getNode().getId());
+		Permission model = ModelUtil.toModel(params, Permission.class);
+//		List<String> roleIds = MapUtil.getList(params, "roleIds");
+//		List<Role> roles = Ebean.find(Role.class).where().in("id", roleIds).findList();
+//		if (roles.size() != roleIds.size()) {
+//			return ajaxForm.setError("角色选择异常!");
+//		}
+//		model.setRoles(roles);
 		model.saveOrUpdate();
 		return ajaxForm.setSuccess(model);
 	}
 
 	@RequestMapping(value = "/search", method = { RequestMethod.GET, RequestMethod.POST })
 	public AjaxForm search(@RequestBody Map<String, Object> params) {
-		ExpressionList<PermissionController> el = Ebean.find(PermissionController.class).where().eq("deleted", false);
+		ExpressionList<Permission> el = Ebean.find(Permission.class).where().eq("deleted", false);
 		String name = MapUtil.getString(params, "name");
 		String url = MapUtil.getString(params, "url");
 		EbeanELUtil.like(el, "name", name);
 		EbeanELUtil.like(el, "url", url);
-		Query<PermissionController> query = el.orderBy("sort");
+		Query<Permission> query = el.orderBy("sort");
 		Paginate paginate = super.paginate(el, params);
 		return paginate.toAjaxForm();
+	}
+
+	@RequestMapping(value = "/search_all", method = { RequestMethod.GET, RequestMethod.POST })
+	public AjaxForm searchAll() {
+		AjaxForm ajaxForm = new AjaxForm();
+		ExpressionList<Permission> el = Ebean.find(Permission.class).where().eq("deleted", false);
+		List<Permission> list = el.orderBy("sort asc").findList();
+		return ajaxForm.setSuccess(list);
 	}
 
 	@RequestMapping(value = "/search_by_id", method = { RequestMethod.GET, RequestMethod.POST })
 	public AjaxForm searchById(@RequestBody Map<String, String> params) {
 		String id = params.get("id");
 
-		ExpressionList<PermissionController> el = Ebean.find(PermissionController.class).where().eq("deleted", false);
-		PermissionController permissionController = el.eq("id", id).findOne();
+		ExpressionList<Permission> el = Ebean.find(Permission.class).where().eq("deleted", false);
+		Permission permissionController = el.eq("id", id).findOne();
 		AjaxForm ajaxForm = new AjaxForm();
 		if (permissionController == null) {
 			return ajaxForm.setError("错误");

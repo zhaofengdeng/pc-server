@@ -1,12 +1,16 @@
 package com.project.model;
 
 import java.util.Date;
+import java.util.List;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
@@ -17,9 +21,9 @@ import io.ebean.annotation.DbComment;
 import io.ebean.annotation.Index;
 
 @Entity
-@Table(name = "tbl_permission_controller")
+@Table(name = "tbl_permission")
 @DbComment("权限控制层")
-public class PermissionController extends BaseEntity{
+public class Permission extends BaseEntity{
 	@Id
 	@Column(name = "id")
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -37,7 +41,8 @@ public class PermissionController extends BaseEntity{
 	@DbComment("所属树节点")
 	@AutowiredModel
 	private TreeNode node;
-	
+
+
 	@DbComment("排序")
 	private Double sort;
 	
@@ -135,6 +140,7 @@ public class PermissionController extends BaseEntity{
 	public void setDeleted(Boolean deleted) {
 		this.deleted = deleted;
 	}
-	
+
+
 	
 }

@@ -1,12 +1,16 @@
 package com.project.model;
 
 import java.util.Date;
+import java.util.List;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
 import javax.persistence.Table;
 
 import com.model.BaseEntity;
@@ -16,18 +20,22 @@ import io.ebean.annotation.DbComment;
 @Entity
 @Table(name = "tbl_role")
 @DbComment("角色表")
-public class Role extends BaseEntity{
+public class Role extends BaseEntity {
 	@Id
 	@Column(name = "id")
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@DbComment("id")
 	private Long id;
-	
+
 	@DbComment("角色名称")
 	public String name;
-	
+
 	@DbComment("角色英文名称")
 	public String engName;
+
+	@ManyToMany
+	@JoinTable(name="tbl_permission_role",joinColumns={@JoinColumn(name="role_id")},inverseJoinColumns={@JoinColumn(name="permission_id")})
+	public List<Permission> permissions;
 	
 	@DbComment("插入时间")
 	private Date insertedAt;
@@ -107,6 +115,13 @@ public class Role extends BaseEntity{
 	public void setDeleted(Boolean deleted) {
 		this.deleted = deleted;
 	}
-	
-	
+
+	public List<Permission> getPermissions() {
+		return permissions;
+	}
+
+	public void setPermissions(List<Permission> permissions) {
+		this.permissions = permissions;
+	}
+
 }
