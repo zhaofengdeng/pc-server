@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.framework.controller.BaseController;
 import com.model.Paginate;
 import com.project.config.PaginateConfig;
+import com.project.model.Permission;
 import com.project.model.Role;
 import com.project.model.User;
 import com.util.EbeanELUtil;

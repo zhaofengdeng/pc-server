@@ -11,6 +11,8 @@ import javax.persistence.Id;
 import javax.persistence.ManyToMany;
 import javax.persistence.Table;
 
+import org.springframework.context.annotation.Lazy;
+
 import com.model.BaseEntity;
 import com.util.base.StringUtil;
 
@@ -66,7 +68,9 @@ public class User extends BaseEntity {
 
 	@Override
 	public void save() {
-		this.setPasswd(StringUtil.Md5BASE64("123456"));
+		if(StringUtil.isNullOrEmpty(passwd)) {
+			this.setPasswd(StringUtil.Md5BASE64("123456"));
+		}
 		super.save();
 	}
 
