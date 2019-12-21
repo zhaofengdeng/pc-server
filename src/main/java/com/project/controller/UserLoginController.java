@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.project.key.SessionKeys;
+import com.project.model.LogUserLogin;
 import com.project.model.User;
 import com.project.util.SessionUtil;
 import com.util.base.StringUtil;
@@ -56,6 +57,7 @@ public class UserLoginController {
 			Subject currentUser = SecurityUtils.getSubject();
 			UsernamePasswordToken token = new UsernamePasswordToken(user.getAccount(), user.getAccount());
 			currentUser.login(token);
+			new LogUserLogin().save(user);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
