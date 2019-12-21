@@ -15,6 +15,7 @@ import org.springframework.aop.framework.autoproxy.DefaultAdvisorAutoProxyCreato
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
+import com.project.config.ViewURLConfig;
 import com.project.realm.MyShiroRealm;
 
 
@@ -50,8 +51,9 @@ public class ShiroConfiguration {
 		Map<String, String> map = new LinkedHashMap<>();
 		// 登出
 		map.put("/logout", "logout");
-		map.put("/user_login/**", "anon");
-		map.put("/log/**", "anon");
+		for (String url : ViewURLConfig.getUrls()) {
+			map.put(url, "anon");
+		}
 		// 对所有用户认证
 		map.put("/**", "authc");
 

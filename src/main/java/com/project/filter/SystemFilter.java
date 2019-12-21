@@ -11,6 +11,8 @@ import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import com.project.util.SessionUtil;
+
 public class SystemFilter implements Filter {
 	@Override
 	public void destroy() {
@@ -23,13 +25,19 @@ public class SystemFilter implements Filter {
 		HttpServletResponse response = (HttpServletResponse) res;
 		
 		HttpServletRequest request = (HttpServletRequest) req;
+		System.out.println();
 		response.setHeader("Access-Control-Allow-Origin", "*");
 		response.setHeader("Access-Control-Allow-Credentials", "true");
 		response.setHeader("Access-Control-Allow-Methods", "POST, GET, PATCH, DELETE, PUT");
 		response.setHeader("Access-Control-Max-Age", "3600");
 		response.setHeader("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
 		response.addHeader("Access-Control-Allow-Credentials", "true");
-		filterChain.doFilter(req, res);
+		if(SessionUtil.hasPermission(request.getSession(),request.getRequestURI())) {
+			filterChain.doFilter(req, res);
+		}else {
+			request.getRequestDispatcher("/user_login/no_permission").forward(request,response);
+		}
+		
 	}
 
 	@Override

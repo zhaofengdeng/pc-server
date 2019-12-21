@@ -30,7 +30,11 @@ public class UserLoginController {
 		AjaxForm ajaxForm = new AjaxForm();
 		return ajaxForm.setError(-100, "未登录");
 	}
-
+	@RequestMapping(value = "/no_permission", method = { RequestMethod.GET, RequestMethod.POST })
+	public AjaxForm noPermission() {
+		AjaxForm ajaxForm = new AjaxForm();
+		return ajaxForm.setError(-101, "没有权限");
+	}
 	@RequestMapping(value = "/login", method = { RequestMethod.GET, RequestMethod.POST })
 	public AjaxForm login(@RequestBody Map<String, String> params) {
 		AjaxForm ajaxForm = new AjaxForm();
@@ -57,6 +61,7 @@ public class UserLoginController {
 			Subject currentUser = SecurityUtils.getSubject();
 			UsernamePasswordToken token = new UsernamePasswordToken(user.getAccount(), user.getAccount());
 			currentUser.login(token);
+			SessionUtil.initPermissionUrl();
 			new LogUserLogin().save(user);
 		} catch (Exception e) {
 			e.printStackTrace();
