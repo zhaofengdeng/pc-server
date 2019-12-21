@@ -51,6 +51,7 @@ public class ShiroConfiguration {
 		// 登出
 		map.put("/logout", "logout");
 		map.put("/user_login/**", "anon");
+		map.put("/log/**", "anon");
 		// 对所有用户认证
 		map.put("/**", "authc");
 
