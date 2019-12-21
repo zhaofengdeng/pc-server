@@ -57,7 +57,7 @@
 		<dependency>
 			<groupId>util</groupId>
 			<artifactId>base</artifactId>
-			<version>0.25</version>
+			<version>0.33</version>
 		</dependency>
 		<dependency>
 			<groupId>util</groupId>
