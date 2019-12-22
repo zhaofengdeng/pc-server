@@ -61,6 +61,10 @@ public class SessionUtil {
 			}
 		}
 		Map<String, String> map = (Map<String, String>) session.getAttribute(SessionKeys.PERMISSION_URLS);
+		
+		if(map==null) {
+			return true;
+		}
 		if (map.containsKey(url)) {
 			return true;
 		}

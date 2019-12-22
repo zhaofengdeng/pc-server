@@ -6,6 +6,7 @@ import java.util.Map;
 
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authc.UsernamePasswordToken;
+import org.apache.shiro.session.Session;
 import org.apache.shiro.subject.Subject;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -30,21 +31,53 @@ public class UserLoginController {
 		AjaxForm ajaxForm = new AjaxForm();
 		return ajaxForm.setError(-100, "未登录");
 	}
+
+	@RequestMapping(value = "/logout", method = { RequestMethod.GET, RequestMethod.POST })
+	public AjaxForm logout() {
+		AjaxForm ajaxForm = new AjaxForm();
+		Subject currentUser = SecurityUtils.getSubject();
+		Session session = currentUser.getSession();
+		session.removeAttribute(SessionKeys.LOGIN_USER);
+		session.removeAttribute(SessionKeys.PERMISSION_URLS);
+		if (currentUser.isAuthenticated()) {
+			currentUser.logout();
+		}
+		return ajaxForm.setSuccess(null);
+	}
+
+	@RequestMapping(value = "/change_passwd", method = { RequestMethod.GET, RequestMethod.POST })
+	public AjaxForm changePasswd(@RequestBody Map<String, String> params) {
+		AjaxForm ajaxForm = new AjaxForm();
+		User user = SessionUtil.getUser();
+		String passwd = params.get("passwd");
+		if (user == null) {
+			return ajaxForm.setError("修改失败，检测该用户会话失效");
+		}
+		if(StringUtil.isNullOrEmpty(passwd)) {
+			return ajaxForm.setError("修改失败，请输入新的密码");
+		}
+		User newUser = Ebean.find(User.class).where().eq("id", user.getId()).findOne();
+		newUser.setPasswd(StringUtil.Md5BASE64(passwd));
+		newUser.saveOrUpdate();
+		return ajaxForm.setSuccess("密码修改成功");
+	}
+
 	@RequestMapping(value = "/no_permission", method = { RequestMethod.GET, RequestMethod.POST })
 	public AjaxForm noPermission() {
 		AjaxForm ajaxForm = new AjaxForm();
 		return ajaxForm.setError(-101, "没有权限");
 	}
+
 	@RequestMapping(value = "/login", method = { RequestMethod.GET, RequestMethod.POST })
 	public AjaxForm login(@RequestBody Map<String, String> params) {
 		AjaxForm ajaxForm = new AjaxForm();
-		
+
 		String userAccount = params.get("userAccount");
 		String userPwd = params.get("userPwd");
-		if(StringUtil.isNullOrEmpty(userAccount)) {
+		if (StringUtil.isNullOrEmpty(userAccount)) {
 			return ajaxForm.setError("用户名为空");
 		}
-		if(StringUtil.isNullOrEmpty(userPwd)) {
+		if (StringUtil.isNullOrEmpty(userPwd)) {
 			return ajaxForm.setError("密码为空");
 		}
 		String md5Pwd = StringUtil.Md5BASE64(userPwd);
@@ -66,7 +99,7 @@ public class UserLoginController {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		
+
 		return ajaxForm.setSuccess(user);
 	}
 

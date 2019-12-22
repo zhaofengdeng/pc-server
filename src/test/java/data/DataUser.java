@@ -13,12 +13,17 @@ import com.util.base.StringUtil;
 import io.ebean.Ebean;
 
 public class DataUser {
-	public static String[][] permissions = new String[][] { { "权限管理", "权限更新", "/permission/save_or_update" },
-			{ "权限管理", "权限-查询", "/permission/search" }, { "权限管理", "权限查询-全部", "/permission/search_all" },
-			{ "权限管理", "权限查询-通过ID", "/permission/search_by_id" }, { "角色管理", "角色更新", "/role/save_or_update" },
+	public static String[][] permissions = new String[][] {
+		{ "权限管理", "权限更新", "/permission/save_or_update" },
+			{ "权限管理", "权限-查询", "/permission/search" }, 
+			{ "权限管理", "权限查询-全部", "/permission/search_all" },
+			{ "权限管理", "权限查询-通过ID", "/permission/search_by_id" }, 
+			{ "角色管理", "角色更新", "/role/save_or_update" },
 			{ "角色管理", "角色-查询", "/role/search" }, { "角色管理", "角色查询-全部", "/role/search_all" },
 			{ "角色管理", "角色查询-通过ID", "/role/search_by_id" }, { "角色管理", "树形菜单数据", "/tree_node/search_all" },
-			{ "用户管理", "用户更新", "/user/save_or_update" }, { "用户管理", "用户查询", "/user/search" },
+			{ "用户管理", "用户更新", "/user/save_or_update" }, 
+			{ "用户管理", "用户查询", "/user/search" },
+			{ "用户管理", "密码重置", "/user/reset_paasswd" },
 			{ "角色管理", "用户查询-通过ID", "/user/search_by_id" }, };
 
 	public static void main(String[] args) {

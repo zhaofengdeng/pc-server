@@ -19,6 +19,7 @@ import com.util.EbeanPaginateUtil;
 import com.util.EbeanUtil;
 import com.util.base.MapUtil;
 import com.util.base.ModelUtil;
+import com.util.base.StringUtil;
 import com.util.form.AjaxForm;
 
 import io.ebean.Ebean;
@@ -67,6 +68,19 @@ public class UserController extends BaseController {
 			return ajaxForm.setError("错误");
 		}
 		return ajaxForm.setSuccess(user);
+	}
+	@RequestMapping(value = "/reset_paasswd", method = { RequestMethod.GET, RequestMethod.POST })
+	public AjaxForm resetPasswd(@RequestBody Map<String, String> params) {
+		String id = params.get("id");
+		
+		ExpressionList<User> el = Ebean.find(User.class).where().eq("deleted", false);
+		User user = el.eq("id", id).findOne();
+		AjaxForm ajaxForm = new AjaxForm();
+		if (user == null) {
+			return ajaxForm.setError("错误");
+		}
+		user.setPasswd(StringUtil.Md5BASE64("123456"));
+		return ajaxForm.setSuccess("重置成功，密码为123456");
 	}
 
 }

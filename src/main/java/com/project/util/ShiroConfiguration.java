@@ -50,7 +50,7 @@ public class ShiroConfiguration {
 		shiroFilterFactoryBean.setSecurityManager(securityManager);
 		Map<String, String> map = new LinkedHashMap<>();
 		// 登出
-		map.put("/logout", "logout");
+		map.put("/user_login/logout", "logout");
 		for (String url : ViewURLConfig.getUrls()) {
 			map.put(url, "anon");
 		}
