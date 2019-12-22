@@ -69,7 +69,7 @@ public class UserController extends BaseController {
 		}
 		return ajaxForm.setSuccess(user);
 	}
-	@RequestMapping(value = "/reset_paasswd", method = { RequestMethod.GET, RequestMethod.POST })
+	@RequestMapping(value = "/reset_passwd", method = { RequestMethod.GET, RequestMethod.POST })
 	public AjaxForm resetPasswd(@RequestBody Map<String, String> params) {
 		String id = params.get("id");
 		
@@ -80,6 +80,7 @@ public class UserController extends BaseController {
 			return ajaxForm.setError("错误");
 		}
 		user.setPasswd(StringUtil.Md5BASE64("123456"));
+		user.saveOrUpdate();
 		return ajaxForm.setSuccess("重置成功，密码为123456");
 	}
 
