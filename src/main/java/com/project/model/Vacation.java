@@ -9,45 +9,44 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToMany;
+import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
 import org.springframework.context.annotation.Lazy;
+import org.springframework.format.annotation.DateTimeFormat;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.model.BaseEntity;
 import com.util.base.StringUtil;
 
 import io.ebean.annotation.DbComment;
 
 @Entity
-@Table(name = "tbl_user")
-@DbComment("账户表")
-public class User extends BaseEntity {
+@Table(name = "tbl_vacation")
+@DbComment("请假表")
+public class Vacation extends BaseEntity {
 	@Id
 	@Column(name = "id")
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@DbComment("id")
 	private Long id;
 
-	@Column(name = "account")
-	public String account;
+	@DbComment("请假时间")
+	@JsonFormat(pattern = "yyyy-MM-dd", timezone="GMT+8")
+	public Date beginDate;
 
-	@Column(name = "passwd")
-	public String passwd;
+	@DbComment("销假时间")
+	@JsonFormat(pattern = "yyyy-MM-dd", timezone="GMT+8")
+	public Date endDate;
 
-	@Column(name = "name")
-	public String name;
+	@DbComment("请假原因")
+	public String content;
 
-	@ManyToMany
-	private List<Role> roles;
+	@ManyToOne
+	public Student student;
 
-	@Column(name = "email")
-	public String email;
-
-	@Column(name = "type")
-	public String type;
-
-	@DbComment("1:启用，0.停用")
-	private Boolean enable;
+	@DbComment("状态")
+	public Integer status;
 
 	@Column(name = "inserted_at")
 	@DbComment("插入时间")
@@ -68,31 +67,15 @@ public class User extends BaseEntity {
 	@Column(name = "deleted")
 	@DbComment("deleted")
 	private Boolean deleted;
-
-	@Override
-	public void save() {
-		if(StringUtil.isNullOrEmpty(passwd)) {
-			this.setPasswd(StringUtil.Md5BASE64("123456"));
+	public String getStatusText() {
+		if(this.getStatus()==1) {
+			return "未销假";
 		}
-		super.save();
+		if(this.getStatus()==2) {
+			return "已销假";
+		}
+		return "";
 	}
-
-	public String getEmail() {
-		return email;
-	}
-
-	public void setEmail(String email) {
-		this.email = email;
-	}
-
-	public Boolean getEnable() {
-		return enable;
-	}
-
-	public void setEnable(Boolean enable) {
-		this.enable = enable;
-	}
-
 	public Long getId() {
 		return id;
 	}
@@ -101,28 +84,44 @@ public class User extends BaseEntity {
 		this.id = id;
 	}
 
-	public String getAccount() {
-		return account;
+	public Date getBeginDate() {
+		return beginDate;
 	}
 
-	public void setAccount(String account) {
-		this.account = account;
+	public void setBeginDate(Date beginDate) {
+		this.beginDate = beginDate;
 	}
 
-	public String getPasswd() {
-		return passwd;
+	public Date getEndDate() {
+		return endDate;
 	}
 
-	public void setPasswd(String passwd) {
-		this.passwd = passwd;
+	public void setEndDate(Date endDate) {
+		this.endDate = endDate;
 	}
 
-	public String getName() {
-		return name;
+	public String getContent() {
+		return content;
 	}
 
-	public void setName(String name) {
-		this.name = name;
+	public void setContent(String content) {
+		this.content = content;
+	}
+
+	public Student getStudent() {
+		return student;
+	}
+
+	public void setStudent(Student student) {
+		this.student = student;
+	}
+
+	public Integer getStatus() {
+		return status;
+	}
+
+	public void setStatus(Integer status) {
+		this.status = status;
 	}
 
 	public Date getInsertedAt() {
@@ -163,22 +162,6 @@ public class User extends BaseEntity {
 
 	public void setDeleted(Boolean deleted) {
 		this.deleted = deleted;
-	}
-
-	public List<Role> getRoles() {
-		return roles;
-	}
-
-	public void setRoles(List<Role> roles) {
-		this.roles = roles;
-	}
-
-	public String getType() {
-		return type;
-	}
-
-	public void setType(String type) {
-		this.type = type;
 	}
 
 }

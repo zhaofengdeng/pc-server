@@ -32,11 +32,7 @@ public class SystemFilter implements Filter {
 		response.setHeader("Access-Control-Max-Age", "3600");
 		response.setHeader("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
 		response.addHeader("Access-Control-Allow-Credentials", "true");
-		if(SessionUtil.hasPermission(request.getSession(),request.getRequestURI())) {
-			filterChain.doFilter(req, res);
-		}else {
-			request.getRequestDispatcher("/user_login/no_permission").forward(request,response);
-		}
+		filterChain.doFilter(req, res);
 		
 	}
 

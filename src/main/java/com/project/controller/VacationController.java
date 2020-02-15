@@ -1,6 +1,7 @@
 package com.project.controller;
 
 import java.util.List;
+
 import java.util.Map;
 
 import org.springframework.web.bind.annotation.RequestBody;
@@ -13,7 +14,8 @@ import com.model.Paginate;
 import com.project.config.PaginateConfig;
 import com.project.model.Permission;
 import com.project.model.Role;
-import com.project.model.User;
+import com.project.model.Student;
+import com.project.model.Vacation;
 import com.util.EbeanELUtil;
 import com.util.EbeanPaginateUtil;
 import com.util.EbeanUtil;
@@ -28,28 +30,29 @@ import io.ebean.Query;
 import javafx.scene.control.Pagination;
 
 @RestController
-@RequestMapping(value = "/user")
-public class UserController extends BaseController {
+@RequestMapping(value = "/vacation")
+public class VacationController extends BaseController {
 	@RequestMapping(value = "/save_or_update", method = { RequestMethod.GET, RequestMethod.POST })
 	public AjaxForm saveOrUpdate(@RequestBody Map<String, Object> params) {
 		AjaxForm ajaxForm = new AjaxForm();
-		User user = ModelUtil.toModel(params, User.class);
-		if(user.getId()==null) {
-			user.setType("管理员");
+		Vacation vacation = ModelUtil.toModel(params, Vacation.class);
+		if(vacation.getId()==null) {
+			vacation.setStudent(Ebean.find(Student.class).where().eq("id", MapUtil.getString(params, "studentId")).findOne());
 		}
-		user.saveOrUpdate();
+		vacation.saveOrUpdate();
 
-		return ajaxForm.setSuccess(user);
+		return ajaxForm.setSuccess(vacation);
 	}
 
 	@RequestMapping(value = "/search", method = { RequestMethod.GET, RequestMethod.POST })
 	public AjaxForm search(@RequestBody Map<String, Object> params) {
-		ExpressionList<User> el = Ebean.find(User.class).where().eq("deleted", false);
+		ExpressionList<Vacation> el = Ebean.find(Vacation.class).where().eq("deleted", false);
 		String name = MapUtil.getString(params, "name");
-		String account = MapUtil.getString(params, "account");
-		EbeanELUtil.like(el, "account", account);
-		EbeanELUtil.like(el, "name", name);
-		Query<User> query = el.orderBy("updatedAt desc");
+		String no = MapUtil.getString(params, "no");
+		EbeanELUtil.like(el, "student.no", no);
+		EbeanELUtil.like(el, "student.name", name);
+		
+		Query<Vacation> query = el.orderBy("updatedAt desc");
 		Paginate paginate = super.paginate(el, params);
 		return paginate.toAjaxForm();
 	}
@@ -58,27 +61,28 @@ public class UserController extends BaseController {
 	public AjaxForm searchById(@RequestBody Map<String, String> params) {
 		String id = params.get("id");
 
-		ExpressionList<User> el = Ebean.find(User.class).where().eq("deleted", false);
-		User user = el.eq("id", id).findOne();
+		ExpressionList<Vacation> el = Ebean.find(Vacation.class).where().eq("deleted", false);
+		Vacation vacation = el.eq("id", id).findOne();
 		AjaxForm ajaxForm = new AjaxForm();
-		if (user == null) {
+		if (vacation == null) {
 			return ajaxForm.setError("错误");
 		}
-		return ajaxForm.setSuccess(user);
+		return ajaxForm.setSuccess(vacation);
 	}
-	@RequestMapping(value = "/reset_passwd", method = { RequestMethod.GET, RequestMethod.POST })
-	public AjaxForm resetPasswd(@RequestBody Map<String, String> params) {
+
+	@RequestMapping(value = "/delete", method = { RequestMethod.GET, RequestMethod.POST })
+	public AjaxForm delete(@RequestBody Map<String, String> params) {
 		String id = params.get("id");
-		
-		ExpressionList<User> el = Ebean.find(User.class).where().eq("deleted", false);
-		User user = el.eq("id", id).findOne();
+
+		ExpressionList<Vacation> el = Ebean.find(Vacation.class).where().eq("deleted", false);
+		Vacation vacation = el.eq("id", id).findOne();
 		AjaxForm ajaxForm = new AjaxForm();
-		if (user == null) {
+		if (vacation == null) {
 			return ajaxForm.setError("错误");
 		}
-		user.setPasswd(StringUtil.Md5BASE64("123456"));
-		user.saveOrUpdate();
-		return ajaxForm.setSuccess("重置成功，密码为123456");
+		vacation.setDeleted(true);
+		vacation.saveOrUpdate();
+		return ajaxForm.setSuccess(vacation);
 	}
 
 }

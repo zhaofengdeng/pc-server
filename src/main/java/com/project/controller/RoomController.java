@@ -1,6 +1,7 @@
 package com.project.controller;
 
 import java.util.List;
+
 import java.util.Map;
 
 import org.springframework.web.bind.annotation.RequestBody;
@@ -13,7 +14,9 @@ import com.model.Paginate;
 import com.project.config.PaginateConfig;
 import com.project.model.Permission;
 import com.project.model.Role;
-import com.project.model.User;
+import com.project.model.Room;
+import com.project.model.RoomScoreLog;
+import com.project.model.Student;
 import com.util.EbeanELUtil;
 import com.util.EbeanPaginateUtil;
 import com.util.EbeanUtil;
@@ -28,57 +31,57 @@ import io.ebean.Query;
 import javafx.scene.control.Pagination;
 
 @RestController
-@RequestMapping(value = "/user")
-public class UserController extends BaseController {
+@RequestMapping(value = "/room")
+public class RoomController extends BaseController {
 	@RequestMapping(value = "/save_or_update", method = { RequestMethod.GET, RequestMethod.POST })
 	public AjaxForm saveOrUpdate(@RequestBody Map<String, Object> params) {
 		AjaxForm ajaxForm = new AjaxForm();
-		User user = ModelUtil.toModel(params, User.class);
-		if(user.getId()==null) {
-			user.setType("管理员");
+		Room room = ModelUtil.toModel(params, Room.class);
+		int qty = Ebean.find(Room.class).where().eq("no", room.getNo()).eq("deleted", false).ne("id", room.getId()).findCount();
+		if(qty>0){
+			return ajaxForm.setError("寝室号重复");
 		}
-		user.saveOrUpdate();
+		room.saveOrUpdate();
 
-		return ajaxForm.setSuccess(user);
+		return ajaxForm.setSuccess(room);
+	}
+	@RequestMapping(value = "/score", method = { RequestMethod.GET, RequestMethod.POST })
+	public AjaxForm score(@RequestBody Map<String, Object> params) {
+		AjaxForm ajaxForm = new AjaxForm();
+		Room room = ModelUtil.toModel(params, Room.class);
+		room.saveOrUpdate();
+		RoomScoreLog log=new RoomScoreLog();
+		log.setScore(room.getScore());
+		log.setRoom(room);
+		log.save();
+		return ajaxForm.setSuccess(room);
 	}
 
 	@RequestMapping(value = "/search", method = { RequestMethod.GET, RequestMethod.POST })
 	public AjaxForm search(@RequestBody Map<String, Object> params) {
-		ExpressionList<User> el = Ebean.find(User.class).where().eq("deleted", false);
+		ExpressionList<Room> el = Ebean.find(Room.class).where().eq("deleted", false);
 		String name = MapUtil.getString(params, "name");
-		String account = MapUtil.getString(params, "account");
-		EbeanELUtil.like(el, "account", account);
+		String no = MapUtil.getString(params, "no");
+		EbeanELUtil.like(el, "no", no);
 		EbeanELUtil.like(el, "name", name);
-		Query<User> query = el.orderBy("updatedAt desc");
+		Query<Room> query = el.orderBy("updatedAt desc");
 		Paginate paginate = super.paginate(el, params);
 		return paginate.toAjaxForm();
 	}
+
 
 	@RequestMapping(value = "/search_by_id", method = { RequestMethod.GET, RequestMethod.POST })
 	public AjaxForm searchById(@RequestBody Map<String, String> params) {
 		String id = params.get("id");
 
-		ExpressionList<User> el = Ebean.find(User.class).where().eq("deleted", false);
-		User user = el.eq("id", id).findOne();
+		ExpressionList<Room> el = Ebean.find(Room.class).where().eq("deleted", false);
+		Room room = el.eq("id", id).findOne();
 		AjaxForm ajaxForm = new AjaxForm();
-		if (user == null) {
+		if (room == null) {
 			return ajaxForm.setError("错误");
 		}
-		return ajaxForm.setSuccess(user);
+		return ajaxForm.setSuccess(room);
 	}
-	@RequestMapping(value = "/reset_passwd", method = { RequestMethod.GET, RequestMethod.POST })
-	public AjaxForm resetPasswd(@RequestBody Map<String, String> params) {
-		String id = params.get("id");
-		
-		ExpressionList<User> el = Ebean.find(User.class).where().eq("deleted", false);
-		User user = el.eq("id", id).findOne();
-		AjaxForm ajaxForm = new AjaxForm();
-		if (user == null) {
-			return ajaxForm.setError("错误");
-		}
-		user.setPasswd(StringUtil.Md5BASE64("123456"));
-		user.saveOrUpdate();
-		return ajaxForm.setSuccess("重置成功，密码为123456");
-	}
+
 
 }

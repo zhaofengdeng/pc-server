@@ -9,6 +9,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToMany;
+import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
 import org.springframework.context.annotation.Lazy;
@@ -19,35 +20,36 @@ import com.util.base.StringUtil;
 import io.ebean.annotation.DbComment;
 
 @Entity
-@Table(name = "tbl_user")
-@DbComment("账户表")
-public class User extends BaseEntity {
+@Table(name = "tbl_tudent")
+@DbComment("学生表")
+public class Student extends BaseEntity {
 	@Id
 	@Column(name = "id")
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@DbComment("id")
 	private Long id;
 
-	@Column(name = "account")
-	public String account;
-
-	@Column(name = "passwd")
-	public String passwd;
-
-	@Column(name = "name")
+	@DbComment("姓名")
 	public String name;
+	@DbComment("电话")
+	public String phone;
 
-	@ManyToMany
-	private List<Role> roles;
+	@DbComment("性别")
+	public String sex;
+	@ManyToOne 
+	public User user;
+	
+	@DbComment("地址")
+	public String address;
 
-	@Column(name = "email")
-	public String email;
+	@DbComment("班级")
+	public String clazz;
+	
+	@ManyToOne
+	private Room room;
 
-	@Column(name = "type")
-	public String type;
-
-	@DbComment("1:启用，0.停用")
-	private Boolean enable;
+	@DbComment("学号")
+	public String no;
 
 	@Column(name = "inserted_at")
 	@DbComment("插入时间")
@@ -69,30 +71,6 @@ public class User extends BaseEntity {
 	@DbComment("deleted")
 	private Boolean deleted;
 
-	@Override
-	public void save() {
-		if(StringUtil.isNullOrEmpty(passwd)) {
-			this.setPasswd(StringUtil.Md5BASE64("123456"));
-		}
-		super.save();
-	}
-
-	public String getEmail() {
-		return email;
-	}
-
-	public void setEmail(String email) {
-		this.email = email;
-	}
-
-	public Boolean getEnable() {
-		return enable;
-	}
-
-	public void setEnable(Boolean enable) {
-		this.enable = enable;
-	}
-
 	public Long getId() {
 		return id;
 	}
@@ -101,28 +79,44 @@ public class User extends BaseEntity {
 		this.id = id;
 	}
 
-	public String getAccount() {
-		return account;
-	}
-
-	public void setAccount(String account) {
-		this.account = account;
-	}
-
-	public String getPasswd() {
-		return passwd;
-	}
-
-	public void setPasswd(String passwd) {
-		this.passwd = passwd;
-	}
-
 	public String getName() {
 		return name;
 	}
 
 	public void setName(String name) {
 		this.name = name;
+	}
+
+	public String getSex() {
+		return sex;
+	}
+
+	public void setSex(String sex) {
+		this.sex = sex;
+	}
+
+	public String getAddress() {
+		return address;
+	}
+
+	public void setAddress(String address) {
+		this.address = address;
+	}
+
+	public String getClazz() {
+		return clazz;
+	}
+
+	public void setClazz(String clazz) {
+		this.clazz = clazz;
+	}
+
+	public String getNo() {
+		return no;
+	}
+
+	public void setNo(String no) {
+		this.no = no;
 	}
 
 	public Date getInsertedAt() {
@@ -165,20 +159,28 @@ public class User extends BaseEntity {
 		this.deleted = deleted;
 	}
 
-	public List<Role> getRoles() {
-		return roles;
+	public String getPhone() {
+		return phone;
 	}
 
-	public void setRoles(List<Role> roles) {
-		this.roles = roles;
+	public void setPhone(String phone) {
+		this.phone = phone;
 	}
 
-	public String getType() {
-		return type;
+	public Room getRoom() {
+		return room;
 	}
 
-	public void setType(String type) {
-		this.type = type;
+	public void setRoom(Room room) {
+		this.room = room;
+	}
+
+	public User getUser() {
+		return user;
+	}
+
+	public void setUser(User user) {
+		this.user = user;
 	}
 
 }
