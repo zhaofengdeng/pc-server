@@ -1,6 +1,7 @@
 package com.project.util;
 
 import java.util.ArrayList;
+
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -13,8 +14,6 @@ import org.apache.shiro.subject.Subject;
 
 import com.project.config.ViewURLConfig;
 import com.project.key.SessionKeys;
-import com.project.model.Permission;
-import com.project.model.Role;
 import com.project.model.User;
 
 public class SessionUtil {
@@ -36,20 +35,7 @@ public class SessionUtil {
 		return session.getAttribute(key);
 	}
 
-	public static void initPermissionUrl() {
-		Map<String, String> permissionMap = new HashMap<>();
-		User user = getUser();
-		if (user != null) {
-			List<Role> roles = user.getRoles();
-			for (Role role : roles) {
-				List<Permission> permissions = role.getPermissions();
-				for (Permission permission : permissions) {
-					permissionMap.put(permission.getUrl(), "");
-				}
-			}
-		}
-		setSessionInfo(SessionKeys.PERMISSION_URLS, permissionMap);
-	}
+
 
 	public static boolean hasPermission(HttpSession session, String url) {
 		if (url.indexOf("//") == 0) {

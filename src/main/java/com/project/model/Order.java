@@ -12,45 +12,39 @@ import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
-import org.springframework.context.annotation.Lazy;
-
 import com.model.BaseEntity;
-import com.util.base.StringUtil;
 
+import io.ebean.Ebean;
 import io.ebean.annotation.DbComment;
 
 @Entity
-@Table(name = "tbl_tudent")
-@DbComment("学生表")
-public class Student extends BaseEntity {
+@Table(name = "tbl_order")
+@DbComment("订单表")
+public class Order extends BaseEntity{
 	@Id
 	@Column(name = "id")
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@DbComment("id")
 	private Long id;
-
-	@DbComment("姓名")
-	public String name;
-	@DbComment("电话")
-	public String phone;
-
-	@DbComment("性别")
-	public String sex;
-	@ManyToOne 
-	public User user;
 	
-	@DbComment("地址")
-	public String address;
-
-	@DbComment("班级")
-	public String clazz;
 	
+
+	private String no;
+	
+	@DbComment("状态：0.购物车1:未发货 2已.发货3确认.收货")
+	private Integer status;
+
+	@DbComment("状态：0.未付款 1.已付款")
+	private Integer payStatus;
+
+	@DbComment("支付金额")
+	private Double payMoney;
+	
+
 	@ManyToOne
-	private Room room;
-
-	@DbComment("学号")
-	public String no;
-
+	private User user;
+	
+	
 	@Column(name = "inserted_at")
 	@DbComment("插入时间")
 	private Date insertedAt;
@@ -70,45 +64,39 @@ public class Student extends BaseEntity {
 	@Column(name = "deleted")
 	@DbComment("deleted")
 	private Boolean deleted;
-
+	public String getStatusText() {
+		if(status==null) {
+			return "";
+		}
+		if(status==0) {
+			return "未付款";
+		}
+		if(status==1) {
+			return "未发货";
+		}
+		if(status==2) {
+			return "已发货";
+		}
+		if(status==3) {
+			return "确认收货";
+		}
+		return "";
+	}
+	public void updatePayMoney() {
+		List<OrderDetail> list = Ebean.find(OrderDetail.class).where().eq("order.id", this.getId()).eq("deleted", false).findList();
+		Double payMoneyAll=new Double(0);
+		for (OrderDetail orderDetail : list) {
+			payMoneyAll=orderDetail.getMoney()+payMoneyAll;
+		}
+		this.setPayMoney(payMoneyAll);
+		this.update();
+	}
 	public Long getId() {
 		return id;
 	}
 
 	public void setId(Long id) {
 		this.id = id;
-	}
-
-	public String getName() {
-		return name;
-	}
-
-	public void setName(String name) {
-		this.name = name;
-	}
-
-	public String getSex() {
-		return sex;
-	}
-
-	public void setSex(String sex) {
-		this.sex = sex;
-	}
-
-	public String getAddress() {
-		return address;
-	}
-
-	public void setAddress(String address) {
-		this.address = address;
-	}
-
-	public String getClazz() {
-		return clazz;
-	}
-
-	public void setClazz(String clazz) {
-		this.clazz = clazz;
 	}
 
 	public String getNo() {
@@ -118,6 +106,32 @@ public class Student extends BaseEntity {
 	public void setNo(String no) {
 		this.no = no;
 	}
+
+	public Integer getStatus() {
+		return status;
+	}
+
+	public void setStatus(Integer status) {
+		this.status = status;
+	}
+
+	public Integer getPayStatus() {
+		return payStatus;
+	}
+
+	public void setPayStatus(Integer payStatus) {
+		this.payStatus = payStatus;
+	}
+
+	public Double getPayMoney() {
+		return payMoney;
+	}
+
+	public void setPayMoney(Double payMoney) {
+		this.payMoney = payMoney;
+	}
+
+	
 
 	public Date getInsertedAt() {
 		return insertedAt;
@@ -159,22 +173,6 @@ public class Student extends BaseEntity {
 		this.deleted = deleted;
 	}
 
-	public String getPhone() {
-		return phone;
-	}
-
-	public void setPhone(String phone) {
-		this.phone = phone;
-	}
-
-	public Room getRoom() {
-		return room;
-	}
-
-	public void setRoom(Room room) {
-		this.room = room;
-	}
-
 	public User getUser() {
 		return user;
 	}
@@ -182,5 +180,7 @@ public class Student extends BaseEntity {
 	public void setUser(User user) {
 		this.user = user;
 	}
-
+	
+	
+	
 }

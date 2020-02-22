@@ -17,6 +17,7 @@ import com.project.key.SessionKeys;
 import com.project.model.LogUserLogin;
 import com.project.model.User;
 import com.project.util.SessionUtil;
+import com.util.base.ModelUtil;
 import com.util.base.StringUtil;
 import com.util.form.AjaxForm;
 
@@ -61,7 +62,18 @@ public class UserLoginController {
 		newUser.saveOrUpdate();
 		return ajaxForm.setSuccess("密码修改成功");
 	}
+	@RequestMapping(value = "/regist", method = { RequestMethod.GET, RequestMethod.POST })
+	public AjaxForm saveOrUpdate(@RequestBody Map<String, Object> params) {
+		AjaxForm ajaxForm = new AjaxForm();
+		User user = ModelUtil.toModel(params, User.class);
+		user.setMoney(0D);
+		user.setType("顾客");
+		user.setEnable(true);
+		user.save();
+		
 
+		return ajaxForm.setSuccess("注册成功，密码为123456，为保证安全请登录系统后尽快修改");
+	}
 	@RequestMapping(value = "/no_permission", method = { RequestMethod.GET, RequestMethod.POST })
 	public AjaxForm noPermission() {
 		AjaxForm ajaxForm = new AjaxForm();
@@ -94,7 +106,6 @@ public class UserLoginController {
 			Subject currentUser = SecurityUtils.getSubject();
 			UsernamePasswordToken token = new UsernamePasswordToken(user.getAccount(), user.getAccount());
 			currentUser.login(token);
-			SessionUtil.initPermissionUrl();
 			new LogUserLogin().save(user);
 		} catch (Exception e) {
 			e.printStackTrace();

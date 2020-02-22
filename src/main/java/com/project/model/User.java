@@ -37,11 +37,21 @@ public class User extends BaseEntity {
 	@Column(name = "name")
 	public String name;
 
-	@ManyToMany
-	private List<Role> roles;
 
-	@Column(name = "email")
-	public String email;
+	@Column(name = "phone")
+	public String phone;
+	
+	@DbComment("年龄")
+	public Integer age;
+
+	@DbComment("性别")
+	public String sex;
+
+	@DbComment("住址")
+	public String address;
+	
+	@DbComment("余额")
+	public Double money;
 
 	@Column(name = "type")
 	public String type;
@@ -77,22 +87,6 @@ public class User extends BaseEntity {
 		super.save();
 	}
 
-	public String getEmail() {
-		return email;
-	}
-
-	public void setEmail(String email) {
-		this.email = email;
-	}
-
-	public Boolean getEnable() {
-		return enable;
-	}
-
-	public void setEnable(Boolean enable) {
-		this.enable = enable;
-	}
-
 	public Long getId() {
 		return id;
 	}
@@ -123,6 +117,62 @@ public class User extends BaseEntity {
 
 	public void setName(String name) {
 		this.name = name;
+	}
+
+	public String getPhone() {
+		return phone;
+	}
+
+	public void setPhone(String phone) {
+		this.phone = phone;
+	}
+
+	public Integer getAge() {
+		return age;
+	}
+
+	public void setAge(Integer age) {
+		this.age = age;
+	}
+
+	public String getSex() {
+		return sex;
+	}
+
+	public void setSex(String sex) {
+		this.sex = sex;
+	}
+
+	public String getAddress() {
+		return address;
+	}
+
+	public void setAddress(String address) {
+		this.address = address;
+	}
+
+	public Double getMoney() {
+		return money;
+	}
+
+	public void setMoney(Double money) {
+		this.money = money;
+	}
+
+	public String getType() {
+		return type;
+	}
+
+	public void setType(String type) {
+		this.type = type;
+	}
+
+	public Boolean getEnable() {
+		return enable;
+	}
+
+	public void setEnable(Boolean enable) {
+		this.enable = enable;
 	}
 
 	public Date getInsertedAt() {
@@ -165,20 +215,6 @@ public class User extends BaseEntity {
 		this.deleted = deleted;
 	}
 
-	public List<Role> getRoles() {
-		return roles;
-	}
-
-	public void setRoles(List<Role> roles) {
-		this.roles = roles;
-	}
-
-	public String getType() {
-		return type;
-	}
-
-	public void setType(String type) {
-		this.type = type;
-	}
+	
 
 }

@@ -1,61 +1,55 @@
 package com.project.model;
 
 import java.util.Date;
-import java.util.List;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.JoinTable;
-import javax.persistence.Lob;
-import javax.persistence.ManyToMany;
+import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
 import com.model.BaseEntity;
 
-import io.ebean.Ebean;
 import io.ebean.annotation.DbComment;
-
 @Entity
-@Table(name = "tbl_notice")
-@DbComment("公告表")
-public class Notice extends BaseEntity {
+@Table(name = "tbl_order_detail")
+@DbComment("订单详细表")
+public class OrderDetail extends BaseEntity{
 	@Id
 	@Column(name = "id")
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@DbComment("id")
 	private Long id;
-
-	@DbComment("标题")
-	public String title;
-
-	@DbComment("详细内容")
-	@Lob
-	public String msg;
 	
-
+	@ManyToOne
+	private Book book;
+	@ManyToOne
+	private Order order;
 	
+	private Double money;
+	
+	@Column(name = "inserted_at")
 	@DbComment("插入时间")
 	private Date insertedAt;
 
+	@Column(name = "inserter")
 	@DbComment("插入人")
 	private String inserter;
 
+	@Column(name = "updated_at")
 	@DbComment("修改时间")
 	private Date updatedAt;
 
+	@Column(name = "updater")
 	@DbComment("修改人")
 	private String updater;
 
-	@DbComment("是否删除")
+	@Column(name = "deleted")
+	@DbComment("deleted")
 	private Boolean deleted;
 
-	
-
-	
 	public Long getId() {
 		return id;
 	}
@@ -64,27 +58,20 @@ public class Notice extends BaseEntity {
 		this.id = id;
 	}
 
-
-
-
-
-
-
-
-	public String getTitle() {
-		return title;
+	public Book getBook() {
+		return book;
 	}
 
-	public void setTitle(String title) {
-		this.title = title;
+	public void setBook(Book book) {
+		this.book = book;
 	}
 
-	public String getMsg() {
-		return msg;
+	public Double getMoney() {
+		return money;
 	}
 
-	public void setMsg(String msg) {
-		this.msg = msg;
+	public void setMoney(Double money) {
+		this.money = money;
 	}
 
 	public Date getInsertedAt() {
@@ -127,5 +114,13 @@ public class Notice extends BaseEntity {
 		this.deleted = deleted;
 	}
 
+	public Order getOrder() {
+		return order;
+	}
+
+	public void setOrder(Order order) {
+		this.order = order;
+	}
+	
 	
 }

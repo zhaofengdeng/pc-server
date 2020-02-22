@@ -11,8 +11,6 @@ import org.springframework.web.bind.annotation.RestController;
 import com.framework.controller.BaseController;
 import com.model.Paginate;
 import com.project.config.PaginateConfig;
-import com.project.model.Permission;
-import com.project.model.Role;
 import com.project.model.User;
 import com.util.EbeanELUtil;
 import com.util.EbeanPaginateUtil;
@@ -37,6 +35,10 @@ public class UserController extends BaseController {
 		if(user.getId()==null) {
 			user.setType("管理员");
 		}
+		String addMoney = MapUtil.getString(params, "addMoney");
+		if(StringUtil.isNotNullOrEmpty(addMoney)) {
+			user.setMoney(user.getMoney()+new Double(addMoney));
+		}
 		user.saveOrUpdate();
 
 		return ajaxForm.setSuccess(user);
@@ -47,8 +49,10 @@ public class UserController extends BaseController {
 		ExpressionList<User> el = Ebean.find(User.class).where().eq("deleted", false);
 		String name = MapUtil.getString(params, "name");
 		String account = MapUtil.getString(params, "account");
+		String type = MapUtil.getString(params, "type");
 		EbeanELUtil.like(el, "account", account);
 		EbeanELUtil.like(el, "name", name);
+		EbeanELUtil.like(el, "type", type);
 		Query<User> query = el.orderBy("updatedAt desc");
 		Paginate paginate = super.paginate(el, params);
 		return paginate.toAjaxForm();
@@ -66,6 +70,21 @@ public class UserController extends BaseController {
 		}
 		return ajaxForm.setSuccess(user);
 	}
+	@RequestMapping(value = "/delete", method = { RequestMethod.GET, RequestMethod.POST })
+	public AjaxForm delete(@RequestBody Map<String, String> params) {
+		String id = params.get("id");
+		
+		ExpressionList<User> el = Ebean.find(User.class).where().eq("deleted", false);
+		User notice = el.eq("id", id).findOne();
+		AjaxForm ajaxForm = new AjaxForm();
+		if (notice == null) {
+			return ajaxForm.setError("错误");
+		}
+		notice.setDeleted(true);
+		notice.saveOrUpdate();
+		return ajaxForm.setSuccess(notice);
+	}
+
 	@RequestMapping(value = "/reset_passwd", method = { RequestMethod.GET, RequestMethod.POST })
 	public AjaxForm resetPasswd(@RequestBody Map<String, String> params) {
 		String id = params.get("id");

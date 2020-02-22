@@ -59,6 +59,7 @@ public class ShiroConfiguration {
 
 		// 登录
 		shiroFilterFactoryBean.setLoginUrl("/user_login/go_login");
+		shiroFilterFactoryBean.setLoginUrl("/user_login/regist");
 		// 首页
 		shiroFilterFactoryBean.setSuccessUrl("/index");
 		// 错误页面，认证不通过跳转
