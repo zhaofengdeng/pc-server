@@ -25,6 +25,7 @@ import com.util.form.AjaxForm;
 import io.ebean.Ebean;
 import io.ebean.ExpressionList;
 import io.ebean.Query;
+import io.ebean.SqlRow;
 
 @RestController
 @RequestMapping(value = "/order")
@@ -154,6 +155,27 @@ public class OrderController extends BaseController {
 		el.eq("order.status", 0);
 		Query<OrderDetail> query = el.orderBy("updatedAt desc");
 		return ajaxForm.setSuccess(query.findList());
+	}
+	@RequestMapping(value = "/analysis", method = { RequestMethod.GET, RequestMethod.POST })
+	public AjaxForm analysis(@RequestBody Map<String, String> params) {
+		AjaxForm ajaxForm = new AjaxForm();
+		String beginDate = params.get("beginDate");
+		String endDate = params.get("endDate");
+		String sql="select b.name,b.code,b.buy_money,"
+				+ "b.sell_money,count(*) as sell_qty,"
+				+ "sum(d.money) as sum_sell_moeny,"
+				+ "sum(d.money)-sum(b.buy_money) as money"
+				+" from tbl_order_detail d,tbl_book b,tbl_order o "
+				+" where o.id=d.id and d.deleted=0  and d.book_id=b.id and o.status>0";
+		if(StringUtil.isNotNullOrEmpty(beginDate)) {
+			sql=sql+" and o.inserted_at>= '"+beginDate+"'";
+		}
+		if(StringUtil.isNotNullOrEmpty(endDate)) {
+			sql=sql+" and o.inserted_at<= '"+endDate+" 23:59:59'";
+		}
+		sql=sql+" group by b.id";
+		List<SqlRow> rows = Ebean.createSqlQuery(sql).findList();
+		return ajaxForm.setSuccess(rows);
 	}
 
 }
