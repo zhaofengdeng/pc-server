@@ -32,9 +32,6 @@ public class UserController extends BaseController {
 	public AjaxForm saveOrUpdate(@RequestBody Map<String, Object> params) {
 		AjaxForm ajaxForm = new AjaxForm();
 		User user = ModelUtil.toModel(params, User.class);
-		if(user.getId()==null) {
-			user.setType("管理员");
-		}
 		String addMoney = MapUtil.getString(params, "addMoney");
 		if(StringUtil.isNotNullOrEmpty(addMoney)) {
 			user.setMoney(user.getMoney()+new Double(addMoney));

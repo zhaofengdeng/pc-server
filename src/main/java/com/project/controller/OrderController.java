@@ -1,6 +1,7 @@
 package com.project.controller;
 
 import java.util.ArrayList;
+
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -12,7 +13,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.framework.controller.BaseController;
 import com.model.Paginate;
-import com.project.model.Book;
+import com.project.model.Product;
 import com.project.model.Order;
 import com.project.model.OrderDetail;
 import com.project.model.User;
@@ -30,13 +31,13 @@ import io.ebean.SqlRow;
 @RestController
 @RequestMapping(value = "/order")
 public class OrderController extends BaseController {
-	@RequestMapping(value = "/add_book", method = { RequestMethod.GET, RequestMethod.POST })
+	@RequestMapping(value = "/add_product", method = { RequestMethod.GET, RequestMethod.POST })
 	public AjaxForm addBook(@RequestBody Map<String, Object> params) {
 		AjaxForm ajaxForm = new AjaxForm();
-		String bookId = MapUtil.getString(params, "bookId");
+		String productId = MapUtil.getString(params, "productId");
 		String userId = MapUtil.getString(params, "userId");
-		if (StringUtil.isNullOrEmpty(bookId)) {
-			return ajaxForm.setError("bookId为空");
+		if (StringUtil.isNullOrEmpty(productId)) {
+			return ajaxForm.setError("productId为空");
 		}
 		if (StringUtil.isNullOrEmpty(userId)) {
 			return ajaxForm.setError("userId为空");
@@ -45,9 +46,9 @@ public class OrderController extends BaseController {
 		if (user == null) {
 			return ajaxForm.setError("userId异常");
 		}
-		Book book = Ebean.find(Book.class).where().eq("id", bookId).findOne();
+		Product product = Ebean.find(Product.class).where().eq("id", productId).findOne();
 		if (user == null) {
-			return ajaxForm.setError("bookId异常");
+			return ajaxForm.setError("productId异常");
 		}
 		List<Order> orders = Ebean.find(Order.class).where().eq("user.id", userId).eq("deleted", false).eq("status", 0)
 				.findList();
@@ -62,8 +63,8 @@ public class OrderController extends BaseController {
 			order.save();
 		}
 		OrderDetail orderDetail = new OrderDetail();
-		orderDetail.setBook(book);
-		orderDetail.setMoney(book.getSellMoney());
+		orderDetail.setProduct(product);
+		orderDetail.setMoney(product.getMoney());
 		orderDetail.setOrder(order);
 		orderDetail.save();
 		order.updatePayMoney();
@@ -101,6 +102,7 @@ public class OrderController extends BaseController {
 	public AjaxForm payment(@RequestBody Map<String, String> params) {
 		AjaxForm ajaxForm = new AjaxForm();
 		String id = params.get("id");
+		String flag = params.get("flag");
 
 		List<OrderDetail> list = Ebean.find(OrderDetail.class).where().eq("deleted", false).eq("order.id", id)
 				.findList();
@@ -108,9 +110,9 @@ public class OrderController extends BaseController {
 			return ajaxForm.setError("订单异常，无法付款");
 		}
 		for (OrderDetail orderDetail : list) {
-			Book book = orderDetail.getBook();
+			Product book = orderDetail.getProduct();
 			if (book.getAllQty() - book.getSellQty() <= 0) {
-				return ajaxForm.setError(book.getName() + "暂无库存");
+				return ajaxForm.setError(book.getName() + "已售完");
 			}
 		}
 		Order order = list.get(0).getOrder();
@@ -119,6 +121,7 @@ public class OrderController extends BaseController {
 		if (user.getMoney() < money) {
 			return ajaxForm.setError("账户余额不够");
 		}
+		order.setFlag(flag);
 		order.setInsertedAt(new Date());
 		user.setMoney(user.getMoney() - money);
 		user.update();
@@ -126,7 +129,7 @@ public class OrderController extends BaseController {
 		order.setPayStatus(1);
 		order.update();
 		for (OrderDetail orderDetail : list) {
-			Book book = orderDetail.getBook();
+			Product book = orderDetail.getProduct();
 			book.setSellQty(book.getSellQty() + 1);
 			book.update();
 		}
@@ -156,26 +159,6 @@ public class OrderController extends BaseController {
 		Query<OrderDetail> query = el.orderBy("updatedAt desc");
 		return ajaxForm.setSuccess(query.findList());
 	}
-	@RequestMapping(value = "/analysis", method = { RequestMethod.GET, RequestMethod.POST })
-	public AjaxForm analysis(@RequestBody Map<String, String> params) {
-		AjaxForm ajaxForm = new AjaxForm();
-		String beginDate = params.get("beginDate");
-		String endDate = params.get("endDate");
-		String sql="select b.name,b.code,b.buy_money,"
-				+ "b.sell_money,count(*) as sell_qty,"
-				+ "sum(d.money) as sum_sell_moeny,"
-				+ "sum(d.money)-sum(b.buy_money) as money"
-				+" from tbl_order_detail d,tbl_book b,tbl_order o "
-				+" where o.id=d.id and d.deleted=0  and d.book_id=b.id and o.status>0";
-		if(StringUtil.isNotNullOrEmpty(beginDate)) {
-			sql=sql+" and o.inserted_at>= '"+beginDate+"'";
-		}
-		if(StringUtil.isNotNullOrEmpty(endDate)) {
-			sql=sql+" and o.inserted_at<= '"+endDate+" 23:59:59'";
-		}
-		sql=sql+" group by b.id";
-		List<SqlRow> rows = Ebean.createSqlQuery(sql).findList();
-		return ajaxForm.setSuccess(rows);
-	}
+
 
 }

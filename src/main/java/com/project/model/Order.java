@@ -30,6 +30,7 @@ public class Order extends BaseEntity{
 	
 
 	private String no;
+	private String flag;
 	
 	@DbComment("状态：0.购物车1:未发货 2已.发货3确认.收货")
 	private Integer status;
@@ -179,6 +180,12 @@ public class Order extends BaseEntity{
 
 	public void setUser(User user) {
 		this.user = user;
+	}
+	public String getFlag() {
+		return flag;
+	}
+	public void setFlag(String flag) {
+		this.flag = flag;
 	}
 	
 	

@@ -7,27 +7,31 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.Lob;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
+import com.fasterxml.jackson.databind.deser.Deserializers.Base;
 import com.model.BaseEntity;
 
 import io.ebean.annotation.DbComment;
+
 @Entity
-@Table(name = "tbl_goods")
-@DbComment("进货表")
-public class Goods extends BaseEntity {
+@Table(name = "tbl_product_detail")
+@DbComment("商品详细表")
+public class ProductDetail extends BaseEntity{
 	@Id
 	@Column(name = "id")
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@DbComment("id")
 	private Long id;
-
-	@ManyToOne
-	private Book book;
 	
-	private Integer qty;
+	@ManyToOne
+	private Product product;
+	@ManyToOne
+	private User user;
+	
+	private String comment;
+	private Integer score;
 	
 	@Column(name = "inserted_at")
 	@DbComment("插入时间")
@@ -57,20 +61,28 @@ public class Goods extends BaseEntity {
 		this.id = id;
 	}
 
-	public Book getBook() {
-		return book;
+	public Integer getScore() {
+		return score;
 	}
 
-	public void setBook(Book book) {
-		this.book = book;
+	public void setScore(Integer score) {
+		this.score = score;
 	}
 
-	public Integer getQty() {
-		return qty;
+	public Product getProduct() {
+		return product;
 	}
 
-	public void setQty(Integer qty) {
-		this.qty = qty;
+	public void setProduct(Product product) {
+		this.product = product;
+	}
+
+	public String getComment() {
+		return comment;
+	}
+
+	public void setComment(String comment) {
+		this.comment = comment;
 	}
 
 	public Date getInsertedAt() {
@@ -112,6 +124,13 @@ public class Goods extends BaseEntity {
 	public void setDeleted(Boolean deleted) {
 		this.deleted = deleted;
 	}
-	
+
+	public User getUser() {
+		return user;
+	}
+
+	public void setUser(User user) {
+		this.user = user;
+	}
 	
 }

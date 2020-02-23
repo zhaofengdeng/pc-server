@@ -15,9 +15,9 @@ import com.model.BaseEntity;
 
 import io.ebean.annotation.DbComment;
 @Entity
-@Table(name = "tbl_book")
-@DbComment("书籍表")
-public class Book extends BaseEntity{
+@Table(name = "tbl_product")
+@DbComment("商品表")
+public class Product extends BaseEntity{
 	@Id
 	@Column(name = "id")
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -26,26 +26,13 @@ public class Book extends BaseEntity{
 
 	@Lob
 	private String img;
-	private String code;
 	
 	private String name;
-	private String author;
 	
-	private String chuBanCompany;
-	
-	@JsonFormat(pattern = "yyyy-MM-dd", timezone="GMT+8")
-	private Date chuBanDate;
-	private Double buyMoney;
-	private Double sellMoney;
-	
-	private String sellCompany;
-	private String sellAddress;
-	private String sellPhone;
+	private Double money;
 	private Integer allQty;
 	private Integer sellQty;
 	
-	@Lob
-	private String brief;
 	
 	@Column(name = "inserted_at")
 	@DbComment("插入时间")
@@ -83,14 +70,6 @@ public class Book extends BaseEntity{
 		this.img = img;
 	}
 
-	public String getCode() {
-		return code;
-	}
-
-	public void setCode(String code) {
-		this.code = code;
-	}
-
 	public String getName() {
 		return name;
 	}
@@ -99,68 +78,12 @@ public class Book extends BaseEntity{
 		this.name = name;
 	}
 
-	public String getAuthor() {
-		return author;
+	public Double getMoney() {
+		return money;
 	}
 
-	public void setAuthor(String author) {
-		this.author = author;
-	}
-
-	public String getChuBanCompany() {
-		return chuBanCompany;
-	}
-
-	public void setChuBanCompany(String chuBanCompany) {
-		this.chuBanCompany = chuBanCompany;
-	}
-
-	public Date getChuBanDate() {
-		return chuBanDate;
-	}
-
-	public void setChuBanDate(Date chuBanDate) {
-		this.chuBanDate = chuBanDate;
-	}
-
-	public Double getBuyMoney() {
-		return buyMoney;
-	}
-
-	public void setBuyMoney(Double buyMoney) {
-		this.buyMoney = buyMoney;
-	}
-
-	public Double getSellMoney() {
-		return sellMoney;
-	}
-
-	public void setSellMoney(Double sellMoney) {
-		this.sellMoney = sellMoney;
-	}
-
-	public String getSellCompany() {
-		return sellCompany;
-	}
-
-	public void setSellCompany(String sellCompany) {
-		this.sellCompany = sellCompany;
-	}
-
-	public String getSellAddress() {
-		return sellAddress;
-	}
-
-	public void setSellAddress(String sellAddress) {
-		this.sellAddress = sellAddress;
-	}
-
-	public String getSellPhone() {
-		return sellPhone;
-	}
-
-	public void setSellPhone(String sellPhone) {
-		this.sellPhone = sellPhone;
+	public void setMoney(Double money) {
+		this.money = money;
 	}
 
 	public Integer getAllQty() {
@@ -177,14 +100,6 @@ public class Book extends BaseEntity{
 
 	public void setSellQty(Integer sellQty) {
 		this.sellQty = sellQty;
-	}
-
-	public String getBrief() {
-		return brief;
-	}
-
-	public void setBrief(String brief) {
-		this.brief = brief;
 	}
 
 	public Date getInsertedAt() {
@@ -226,6 +141,7 @@ public class Book extends BaseEntity{
 	public void setDeleted(Boolean deleted) {
 		this.deleted = deleted;
 	}
+
 	
 	
 }

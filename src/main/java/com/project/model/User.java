@@ -41,14 +41,7 @@ public class User extends BaseEntity {
 	@Column(name = "phone")
 	public String phone;
 	
-	@DbComment("年龄")
-	public Integer age;
-
-	@DbComment("性别")
-	public String sex;
-
-	@DbComment("住址")
-	public String address;
+	
 	
 	@DbComment("余额")
 	public Double money;
@@ -127,30 +120,6 @@ public class User extends BaseEntity {
 		this.phone = phone;
 	}
 
-	public Integer getAge() {
-		return age;
-	}
-
-	public void setAge(Integer age) {
-		this.age = age;
-	}
-
-	public String getSex() {
-		return sex;
-	}
-
-	public void setSex(String sex) {
-		this.sex = sex;
-	}
-
-	public String getAddress() {
-		return address;
-	}
-
-	public void setAddress(String address) {
-		this.address = address;
-	}
-
 	public Double getMoney() {
 		return money;
 	}
@@ -215,6 +184,7 @@ public class User extends BaseEntity {
 		this.deleted = deleted;
 	}
 
+	 
 	
 
 }

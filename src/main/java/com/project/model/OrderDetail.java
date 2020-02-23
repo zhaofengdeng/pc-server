@@ -24,7 +24,7 @@ public class OrderDetail extends BaseEntity{
 	private Long id;
 	
 	@ManyToOne
-	private Book book;
+	private Product product;
 	@ManyToOne
 	private Order order;
 	
@@ -58,12 +58,13 @@ public class OrderDetail extends BaseEntity{
 		this.id = id;
 	}
 
-	public Book getBook() {
-		return book;
+
+	public Product getProduct() {
+		return product;
 	}
 
-	public void setBook(Book book) {
-		this.book = book;
+	public void setProduct(Product product) {
+		this.product = product;
 	}
 
 	public Double getMoney() {
