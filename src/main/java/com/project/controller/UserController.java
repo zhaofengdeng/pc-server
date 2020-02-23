@@ -36,6 +36,10 @@ public class UserController extends BaseController {
 		if(StringUtil.isNotNullOrEmpty(addMoney)) {
 			user.setMoney(user.getMoney()+new Double(addMoney));
 		}
+		
+		if(user.getId()==null) {
+			user.setMoney(0D);
+		}
 		user.saveOrUpdate();
 
 		return ajaxForm.setSuccess(user);
