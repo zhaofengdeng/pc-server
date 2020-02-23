@@ -42,7 +42,11 @@ public class ProductController  extends BaseController{
 	public AjaxForm search(@RequestBody Map<String, Object> params) {
 		ExpressionList<Product> el = Ebean.find(Product.class).where().eq("deleted", false);
 		String name = MapUtil.getString(params, "name");
+		String type1 = MapUtil.getString(params, "type1");
+		String type2 = MapUtil.getString(params, "type2");
 		EbeanELUtil.like(el, "name", name);
+		EbeanELUtil.like(el, "type1", type1);
+		EbeanELUtil.like(el, "type2", type2);
 		Query<Product> query = el.orderBy("updatedAt desc");
 		Paginate paginate = super.paginate(el, params);
 		return paginate.toAjaxForm();

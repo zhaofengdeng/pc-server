@@ -159,6 +159,15 @@ public class OrderController extends BaseController {
 		Query<OrderDetail> query = el.orderBy("updatedAt desc");
 		return ajaxForm.setSuccess(query.findList());
 	}
+	@RequestMapping(value = "/search_details_by_id", method = { RequestMethod.GET, RequestMethod.POST })
+	public AjaxForm searchDetailsById(@RequestBody Map<String, Object> params) {
+		AjaxForm ajaxForm = new AjaxForm();
+		String id = MapUtil.getString(params, "id");
+		ExpressionList<OrderDetail> el = Ebean.find(OrderDetail.class).where().eq("deleted", false);
+		el.eq("order.id", id);
+		Query<OrderDetail> query = el.orderBy("updatedAt desc");
+		return ajaxForm.setSuccess(query.findList());
+	}
 
 
 }

@@ -73,13 +73,13 @@ public class Order extends BaseEntity{
 			return "未付款";
 		}
 		if(status==1) {
-			return "未发货";
+			return "制作中";
 		}
 		if(status==2) {
-			return "已发货";
+			return "待取餐";
 		}
 		if(status==3) {
-			return "确认收货";
+			return "已取餐";
 		}
 		return "";
 	}

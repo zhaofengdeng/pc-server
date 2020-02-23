@@ -28,6 +28,8 @@ public class Product extends BaseEntity{
 	private String img;
 	
 	private String name;
+	private String type1;
+	private String type2;
 	
 	private Double money;
 	private Integer allQty;
@@ -140,6 +142,22 @@ public class Product extends BaseEntity{
 
 	public void setDeleted(Boolean deleted) {
 		this.deleted = deleted;
+	}
+
+	public String getType1() {
+		return type1;
+	}
+
+	public void setType1(String type1) {
+		this.type1 = type1;
+	}
+
+	public String getType2() {
+		return type2;
+	}
+
+	public void setType2(String type2) {
+		this.type2 = type2;
 	}
 
 	
